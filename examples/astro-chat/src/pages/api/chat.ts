@@ -19,14 +19,6 @@ interface ChatRequest {
   model?: string;
 }
 
-/**
- * Turn a provider error into one line worth showing.
- *
- * OpenRouter wraps the upstream provider's error in a JSON body; the useful
- * part is `error.metadata.raw`, which carries the actual remedy ("rate-limited
- * upstream, retry shortly"). Without digging that out the user sees a generic
- * failure and has no idea the fix is to wait or switch model.
- */
 interface ProviderError {
   message?: string;
   statusCode?: number;
@@ -52,6 +44,14 @@ function unwrap(error: unknown, depth = 0): ProviderError {
   return inner ? unwrap(inner, depth + 1) : current;
 }
 
+/**
+ * Turn a provider error into one line worth showing.
+ *
+ * OpenRouter wraps the upstream provider's error in a JSON body; the useful
+ * part is `error.metadata.raw`, which carries the actual remedy ("rate-limited
+ * upstream, retry shortly"). Without digging that out the user sees a generic
+ * failure and has no idea the fix is to wait or switch model.
+ */
 function describeError(error: unknown): string {
   const anyError = unwrap(error);
   const body = anyError?.responseBody;

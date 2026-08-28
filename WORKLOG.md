@@ -10,6 +10,25 @@ Append with:
 uv run --no-project --with pydantic python /mnt/c/Dev/projectstd/projectstd.py log . -m "what changed"
 ```
 
+## 2026-08-28 — OpenRouter provider for astro-chat
+
+**What:** Added OpenRouter alongside AI Gateway in `examples/astro-chat`, via
+`@ai-sdk/openai-compatible`. Default model is now
+`google/gemma-4-31b-it:free`, so the example runs on an OpenRouter key alone
+with no billing. Models declare their provider; a model whose provider has no
+key is served by the free default and the substitution is reported in
+`x-served-model` / `x-fell-back-from` rather than answered silently.
+
+**Why:** the example previously needed an AI Gateway key, which nobody here had
+— it could not actually be run. This also closed the open item from the entry
+below: a full turn has now been streamed from a live model.
+
+**Next:** two gaps remain. No live turn has yet produced a generated spec — the
+`:free` pools 429'd on every attempt after the first success, so the model never
+exercised the catalog. And `AI_GATEWAY_API_KEY` is still unset, so the Claude
+models are only exercised through the fallback path. A paid OpenRouter model
+would close both in one run.
+
 ## 2026-08-28 — Astro evaluation + astro-chat example
 
 **What:** Indexed the repo into codebase-intel (`indexes/json-render/`, 1,542
