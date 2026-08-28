@@ -63,8 +63,7 @@ function renderElement(
   if (resolvedElement.repeat) {
     const items =
       (getByPath(stateModel, resolvedElement.repeat.statePath) as
-        | unknown[]
-        | undefined) ?? [];
+        unknown[] | undefined) ?? [];
 
     const fragments = items.map((item, index) => {
       const key =
@@ -162,7 +161,7 @@ export async function renderToBuffer(
 export async function renderToStream(
   spec: Spec,
   options?: RenderOptions,
-): Promise<ReadableStream> {
+): Promise<NodeJS.ReadableStream> {
   const document = buildDocument(spec, options);
   return pdfRenderToStream(document as any);
 }
