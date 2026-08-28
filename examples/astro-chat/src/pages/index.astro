@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+import { Chat } from "../components/Chat";
+
+export const prerender = false;
+---
+
+<Base title="json-render chat">
+  <!--
+    client:only rather than client:load: the chat's first render depends on
+    localStorage, so there is no meaningful server HTML to hydrate — rendering
+    it on the server would only produce a shell React immediately discards.
+    Everything else on the page stays server-rendered with zero JS.
+  -->
+  <Chat client:only="react" />
+</Base>

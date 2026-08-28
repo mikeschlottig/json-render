@@ -1,0 +1,11 @@
+---
+import Base from "../layouts/Base.astro";
+import { Gallery } from "../components/Gallery";
+---
+
+<Base
+  title="Catalog gallery"
+  description="Every json-render component this example can render, from one spec."
+>
+  <Gallery client:load />
+</Base>
