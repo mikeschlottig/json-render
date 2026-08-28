@@ -1,0 +1,13 @@
+{
+  "schema_version": "1",
+  "name": "json-render",
+  "kind": "tool",
+  "status": "live",
+  "tagline": "Generate dynamic, personalized UIs from prompts without sacrificing reliability. Predefined components and actions for safe, predictable output",
+  "writes_files": false,
+  "trust": [],
+  "costs": [],
+  "known_issues": [
+    "Seeded automatically on 2026-08-25. Nothing below the generated blocks has been written by a human yet \u2014 treat the prose as absent, not as a claim."
+  ]
+}

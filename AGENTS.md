@@ -128,3 +128,88 @@ npx opensrc <owner>/<repo>      # GitHub repo (e.g., npx opensrc vercel/ai)
 ```
 
 <!-- opensrc:end -->
+
+## Where the intel lives
+
+<!-- projectstd:begin id=pointer v=1 -->
+**Never grep to find context. Follow pointer → index → query.**
+
+| store | where | what it answers |
+|---|---|---|
+| **CONTENT** | `/home/mikes/corpusidx` | words — docs, transcripts, pages |
+| **CODE** | `/home/mikes/codebase-intel-toolkit` | structure — symbols, files, deps |
+| **CONDUCT** | `/home/mikes/session-audit` | what agents did — findings, lessons |
+| **WORK** | `/home/mikes/roadmap` | planned, in progress, done |
+| **LAYOUT** | `/home/mikes/projectstd` | the shape every project root must have |
+
+**What is next here:** [`WORKLOG.md`](WORKLOG.md) — 1 entry, newest first. Append with `uv run --no-project --with pydantic python /mnt/c/Dev/projectstd/projectstd.py log . -m "what changed"` when you finish work here.
+<!-- projectstd:end id=pointer -->
+
+## CLI toolkit
+
+<!-- projectstd:begin id=toolkit v=1 -->
+| when you need | run |
+|---|---|
+| What is in the corpus? | `uv run --project /home/mikes/corpusidx corpusidx query search "<question>"` |
+| Where does this symbol live? | `uv run --project /home/mikes/codebase-intel-toolkit intel show <symbol> --body` |
+| How is this codebase laid out? | `uv run --project /home/mikes/codebase-intel-toolkit intel map <dir>` |
+| What went wrong in past sessions? | `uv run --project /home/mikes/session-audit sessaudit query findings --rule <RULE>` |
+| What should I work on? | `uv run --project /home/mikes/roadmap rmap next` |
+| Is this project compliant? | `uv run --no-project --with pydantic python /mnt/c/Dev/projectstd/projectstd.py check <dir>` |
+
+**Python runs through `uv`, never a bare interpreter.** `uv run --project <dir>` for a project with a `pyproject.toml`; `uv run --no-project --python 3.13 python <file>` for a loose script. `python3` and bare `python` hit the Microsoft Store stub and print an advertisement instead of running.
+
+**Where output goes:** a tool never writes its index into the tree it indexed. Store output stays in the store.
+<!-- projectstd:end id=toolkit -->
+
+## Layout
+
+<!-- projectstd:begin id=layout v=1 -->
+```
+/home/mikes/json-render  (tool, 1,604 files, 8.8 MB)
+  apps/
+  examples/
+  packages/
+  scripts/   one-off and operational scripts
+  skills/
+  tests/     tests
+```
+<!-- projectstd:end id=layout -->
+
+## Run and verify
+
+<!-- projectstd:begin id=run v=1 -->
+Run it:
+
+- dev — `cd /home/mikes/json-render && npm run dev`
+- build — `cd /home/mikes/json-render && npm run build`
+
+Verify it:
+
+- test — `cd /home/mikes/json-render && npm run test`
+- lint — `cd /home/mikes/json-render && npm run lint`
+<!-- projectstd:end id=run -->
+
+## Output locations
+
+<!-- projectstd:begin id=output v=1 -->
+_This project writes no artifacts outside itself._
+<!-- projectstd:end id=output -->
+
+## Trust boundary
+
+<!-- projectstd:begin id=trust v=1 -->
+_No trust boundary declared. If this project infers anything, say which fields are measured and which are guessed — an agent that cannot tell will either trust everything or nothing._
+<!-- projectstd:end id=trust -->
+
+## Cost table
+
+<!-- projectstd:begin id=cost v=1 -->
+_No cost table declared._
+<!-- projectstd:end id=cost -->
+
+## Known issues
+
+<!-- projectstd:begin id=known v=1 -->
+- Seeded automatically on 2026-08-25. Nothing below the generated blocks has been written by a human yet — treat the prose as absent, not as a claim.
+<!-- projectstd:end id=known -->

@@ -1,5 +1,22 @@
 # json-render
 
+<!-- projectstd:begin id=facts v=1 -->
+| | |
+|---|---|
+| Kind | tool |
+| Framework | React · Svelte |
+| Languages | TypeScript 857 · Svelte 263 · Markdown 152 · JSON 134 · JavaScript 43 · CSS 18 |
+| Dependencies | `@resvg/resvg-js@2.6.2` · `@solidjs/testing-library^0.8.10` · `@sveltejs/vite-plugin-svelte^6.2.4` · `@testing-library/dom^10.4.1` · `@testing-library/react^16.3.1` · `@testing-library/svelte^5.2.0` · `@types/react^19.2.3` · `husky^9.1.7` (+12 more) |
+| Size | 1,604 files, 8.8 MB |
+| Coding standards | `/home/mikes/projectstd/STANDARD.md` |
+| Worklog | [`WORKLOG.md`](WORKLOG.md) — 1 entry |
+| Agent contract | [`AGENTS.md`](AGENTS.md) |
+<!-- projectstd:end id=facts -->
+
+## Purpose
+
+_Not written yet. The agent that works here writes this: what this project is for, the decision it answers, and who asks it. One paragraph._
+
 **The Generative UI framework.**
 
 Generate dynamic, personalized UIs from prompts without sacrificing reliability. Predefined components and actions for safe, predictable output.
@@ -752,6 +769,7 @@ pnpm dev
 - http://react-email-demo.json-render.localhost:1355 - React Email Example
 - http://remotion-demo.json-render.localhost:1355 - Remotion Video Example
 - Chat Example: run `pnpm dev` in `examples/chat`
+- Astro Chat Example (chat UI as an Astro island): run `pnpm dev` in `examples/astro-chat`
 - Svelte Example: run `pnpm dev` in `examples/svelte` or `examples/svelte-chat`
 - Vue Example: run `pnpm dev` in `examples/vue`
 - Vite Renderers (React + Vue + Svelte + Solid): run `pnpm dev` in `examples/vite-renderers`
@@ -780,3 +798,44 @@ flowchart LR
 ## License
 
 Apache-2.0
+
+## Layout
+
+<!-- projectstd:begin id=layout v=1 -->
+```
+  apps/
+  examples/
+  packages/
+  scripts/   one-off and operational scripts
+  skills/
+  tests/     tests
+```
+<!-- projectstd:end id=layout -->
+
+## Commands
+
+<!-- projectstd:begin id=commands v=1 -->
+dev:
+
+```bash
+cd /home/mikes/json-render && npm run dev
+```
+
+build:
+
+```bash
+cd /home/mikes/json-render && npm run build
+```
+
+Verify — test:
+
+```bash
+cd /home/mikes/json-render && npm run test
+```
+
+Verify — lint:
+
+```bash
+cd /home/mikes/json-render && npm run lint
+```
+<!-- projectstd:end id=commands -->
