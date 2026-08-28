@@ -48,12 +48,21 @@ export const MODELS: ModelOption[] = [
   // --------------------------------------------------------------- OpenRouter
 
   {
+    id: "xiaomi/mimo-v2.5-pro",
+    name: "MiMo V2.5 Pro",
+    provider: "openrouter",
+    vendor: "Xiaomi",
+    blurb:
+      "The default. Strong on agentic and long-horizon work, and cheap at $0.43/$0.87 per 1M.",
+    tier: "frontier",
+    contextLabel: "1.05M context",
+  },
+  {
     id: "google/gemma-4-31b-it:free",
     name: "Gemma 4 31B",
     provider: "openrouter",
     vendor: "Google",
-    blurb:
-      "Free and capable. The default, and the one that works with no billing.",
+    blurb: "Free tier. Fine for quick turns, but the shared pool rate-limits.",
     tier: "balanced",
     contextLabel: "262K context",
     free: true,
@@ -111,10 +120,13 @@ export const MODELS: ModelOption[] = [
 ];
 
 /**
- * Gemma on OpenRouter: free, so the example runs for anyone who has only an
- * OpenRouter key, which is the common case.
+ * MiMo V2.5 Pro on OpenRouter. Paid, but cheap, and it does not sit on the
+ * shared free pool that rate-limits under load — which matters for a default,
+ * since a first-run 429 reads as "the example is broken".
+ *
+ * The free models stay in the picker for anyone who would rather not spend.
  */
-export const DEFAULT_MODEL_ID = "google/gemma-4-31b-it:free";
+export const DEFAULT_MODEL_ID = "xiaomi/mimo-v2.5-pro";
 
 /** Where a request goes when the selected model's provider has no key. */
 export const FALLBACK_MODEL_ID = DEFAULT_MODEL_ID;

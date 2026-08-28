@@ -18,9 +18,10 @@ pnpm install
 pnpm dev
 ```
 
-Either key is enough. The default model is `google/gemma-4-31b-it:free` on
-OpenRouter, so an OpenRouter key alone gets you a working app with no billing
-set up.
+Either key is enough. The default model is `xiaomi/mimo-v2.5-pro` on OpenRouter
+— paid, but cheap at $0.43/$0.87 per 1M tokens. If you would rather not spend,
+pick one of the `:free` models in the dropdown; they work, but they sit on a
+shared pool that rate-limits under load.
 
 The dev server runs under [portless](https://github.com/vercel-labs/portless) at
 `astro-chat-demo.json-render.localhost:1355`. Install it globally first
@@ -78,10 +79,10 @@ bare `provider/model` string; OpenRouter is reached through
 `src/lib/providers.server.ts` resolves a requested model to something runnable:
 
 - If its provider has a key, use it.
-- If not, serve the free default (`google/gemma-4-31b-it:free`) instead and
-  report the substitution in the `x-served-model` and `x-fell-back-from`
-  response headers. The chat surfaces that as a notice rather than letting a
-  different model answer silently.
+- If not, serve the default (`xiaomi/mimo-v2.5-pro`) instead and report the
+  substitution in the `x-served-model` and `x-fell-back-from` response headers.
+  The chat surfaces that as a notice rather than letting a different model
+  answer silently.
 - If no provider has a key at all, return a 500 that names both variables.
 
 `GET /api/providers` reports which providers are configured — never key values —

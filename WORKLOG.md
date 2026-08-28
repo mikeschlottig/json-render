@@ -23,11 +23,15 @@ key is served by the free default and the substitution is reported in
 — it could not actually be run. This also closed the open item from the entry
 below: a full turn has now been streamed from a live model.
 
-**Next:** two gaps remain. No live turn has yet produced a generated spec — the
-`:free` pools 429'd on every attempt after the first success, so the model never
-exercised the catalog. And `AI_GATEWAY_API_KEY` is still unset, so the Claude
-models are only exercised through the fallback path. A paid OpenRouter model
-would close both in one run.
+**Update (same day):** default changed to `xiaomi/mimo-v2.5-pro` — paid, but
+cheap ($0.43/$0.87 per 1M) and off the shared free pool, so a first run does not
+greet you with a 429. That closed the generated-spec gap: a live turn emitted 5
+SpecStream patch frames which `buildSpecFromParts` compiled into a valid spec
+(root resolves, 4 elements, Stack/Text/Card, zero components outside the
+catalog). The free models stay in the picker.
+
+**Next:** `AI_GATEWAY_API_KEY` is still unset, so the Claude models are only
+exercised through the fallback path, never end to end.
 
 ## 2026-08-28 — Astro evaluation + astro-chat example
 
