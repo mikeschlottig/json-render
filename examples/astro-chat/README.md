@@ -13,10 +13,14 @@ Two routes:
 ## Running it
 
 ```bash
-cp .env.example .env      # add your AI_GATEWAY_API_KEY
+cp .env.example .env      # add OPENROUTER_API_KEY, AI_GATEWAY_API_KEY, or both
 pnpm install
 pnpm dev
 ```
+
+Either key is enough. The default model is `google/gemma-4-31b-it:free` on
+OpenRouter, so an OpenRouter key alone gets you a working app with no billing
+set up.
 
 The dev server runs under [portless](https://github.com/vercel-labs/portless) at
 `astro-chat-demo.json-render.localhost:1355`. Install it globally first
@@ -55,13 +59,43 @@ and the chat sends that prompt as the next user message.
 
 | Area | What's there |
 | --- | --- |
-| Models | Dropdown over an allowlist in `src/lib/models.ts`; the server rejects anything not on it |
+| Providers | OpenRouter (OpenAI-compatible endpoint) and Vercel AI Gateway; each model declares which serves it |
+| Models | Dropdown grouped by provider, over an allowlist in `src/lib/models.ts`; the server rejects anything not on it |
+| Fallback | A model whose provider has no key is served by the free default instead of failing, and the UI says so |
 | History | Conversations in `localStorage` — search, rename, delete, grouped by recency |
 | Export | Markdown, JSON (lossless, keeps every spec), or plain text; copy or download |
 | Code | Dependency-free highlighter for 10 languages, copy button, soft-wrap toggle |
 | Streaming | Token-by-token render, stop, regenerate, edit-and-resend, follow-scroll that yields when you scroll up |
 | Theme | Light/dark, applied inline before first paint so there is no flash |
 | Keyboard | `/` focuses the composer, `Ctrl/Cmd+K` new chat, `Ctrl/Cmd+B` sidebar |
+
+## Providers and fallback
+
+Each entry in `src/lib/models.ts` declares a `provider`. AI Gateway takes the
+bare `provider/model` string; OpenRouter is reached through
+`@ai-sdk/openai-compatible` pointed at `https://openrouter.ai/api/v1`.
+
+`src/lib/providers.server.ts` resolves a requested model to something runnable:
+
+- If its provider has a key, use it.
+- If not, serve the free default (`google/gemma-4-31b-it:free`) instead and
+  report the substitution in the `x-served-model` and `x-fell-back-from`
+  response headers. The chat surfaces that as a notice rather than letting a
+  different model answer silently.
+- If no provider has a key at all, return a 500 that names both variables.
+
+`GET /api/providers` reports which providers are configured — never key values —
+so the picker can show unavailable models greyed out instead of letting you
+discover the problem by sending a message.
+
+The `.server.ts` suffix is load-bearing: that module reads API keys, and Astro
+will bundle anything an island imports.
+
+**On free models.** The `:free` OpenRouter tiers run on a shared upstream pool
+and return 429 fairly often. The endpoint unwraps the provider error so you get
+OpenRouter's actual message ("temporarily rate-limited upstream, retry shortly")
+rather than a generic failure. Retry, switch model, or add your own provider key
+in OpenRouter's integrations settings.
 
 ## Layout
 
@@ -74,11 +108,13 @@ src/
     SpecRenderer  Providers + Renderer, one set per assistant message
   lib/
     models.ts     The picker allowlist, shared by client and server
+    providers.server.ts  Key detection, provider construction, fallback
     system-prompt Voice rules + catalog.prompt(), so the two cannot drift
   pages/
     index.astro   The chat
     gallery.astro The catalog gallery
     api/chat.ts   streamText → pipeJsonRender → UI message stream
+    api/providers.ts  Which providers have keys
 ```
 
 ## Adding a component

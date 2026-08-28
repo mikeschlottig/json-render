@@ -7,7 +7,7 @@ import { Composer } from "./Composer";
 import { Message } from "./Message";
 import { ModelPicker } from "./ModelPicker";
 import { ExportMenu } from "./ExportMenu";
-import { MoonIcon, PanelIcon, SparkIcon, SunIcon } from "./icons";
+import { MoonIcon, PanelIcon, SparkIcon, SunIcon, XIcon } from "./icons";
 import { toPlainText } from "./Markdown";
 
 import {
@@ -18,14 +18,31 @@ import {
   saveConversations,
   type Conversation,
 } from "../lib/conversations";
-import { DEFAULT_MODEL_ID } from "../lib/models";
+import { DEFAULT_MODEL_ID, PROVIDERS, findModel } from "../lib/models";
 import { registerSender } from "../lib/chat-bridge";
 import { getTextFromParts } from "@json-render/react";
 import type { DataPart } from "@json-render/react";
 
 import "../styles/chat.css";
 
-const transport = new DefaultChatTransport({ api: "/api/chat" });
+/**
+ * The endpoint reports which model actually served a turn via response headers,
+ * because it may substitute a fallback when the requested model's provider has
+ * no key. `useChat` does not surface headers, so the transport gets a wrapped
+ * fetch that reads them and hands them to whichever Chat is mounted.
+ */
+let onServed: ((served: string, fellBackFrom: string | null) => void) | null =
+  null;
+
+const transport = new DefaultChatTransport({
+  api: "/api/chat",
+  fetch: async (input, init) => {
+    const response = await fetch(input as RequestInfo, init);
+    const served = response.headers.get("x-served-model");
+    if (served) onServed?.(served, response.headers.get("x-fell-back-from"));
+    return response;
+  },
+});
 
 const STARTERS = [
   "Compare Astro islands with Next.js server components",
@@ -67,6 +84,7 @@ export function Chat() {
 
   const [modelId, setModelId] = useState(DEFAULT_MODEL_ID);
   const [seed, setSeed] = useState<string | undefined>(undefined);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const {
     messages,
@@ -144,6 +162,20 @@ export function Chat() {
     });
     return () => registerSender(null);
   }, [send, busy]);
+
+  // Report a provider substitution once, when it happens.
+  useEffect(() => {
+    onServed = (served, fellBackFrom) => {
+      setNotice(
+        fellBackFrom && fellBackFrom !== served
+          ? `${findModel(fellBackFrom).name} needs ${PROVIDERS[findModel(fellBackFrom).provider].envVar}. Answered with ${findModel(served).name} instead.`
+          : null,
+      );
+    };
+    return () => {
+      onServed = null;
+    };
+  }, []);
 
   const createConversation = useCallback(() => {
     const fresh = emptyConversation(modelId);
@@ -361,6 +393,20 @@ export function Chat() {
                 }
               />
             ))}
+
+            {notice && (
+              <div className="notice" role="status">
+                <span>{notice}</span>
+                <button
+                  type="button"
+                  className="btn icon tiny"
+                  onClick={() => setNotice(null)}
+                  aria-label="Dismiss"
+                >
+                  <XIcon />
+                </button>
+              </div>
+            )}
 
             {error && (
               <div className="error" role="alert">

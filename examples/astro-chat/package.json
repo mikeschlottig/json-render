@@ -12,6 +12,7 @@
     "check-types": "astro check --minimumSeverity error"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "3.0.37",
     "@ai-sdk/react": "4.0.82",
     "@astrojs/node": "11.1.4",
     "@astrojs/react": "6.0.4",
